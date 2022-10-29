@@ -3,8 +3,9 @@
         <p class="top-users">Top Users</p>
     </div>
     <div v-if="!loading">
-        <div class="user-list row" v-if="$store.state.searchUsers.length > 0">
-            <div class="col-3 text-center mt-50" v-for="user in $store.state.searchUsers" :key="user.id">
+        <div class="user-list row" v-if="userList.length > 0">
+            <div class="col-3 text-center mt-50"
+                v-for="user in userList.filter(user => user.login.indexOf($store.state.keyword) !== -1)" :key="user.id">
                 <div class="user-avatar">
                     <img :src="user.avatar_url" width="140" height="140" v-if="user.avatar_url" />
                     <img src="../assets/default-avatar.png" v-else />
@@ -21,7 +22,7 @@
             </div>
         </div>
         <div class="text-center mt-100" v-else>
-            <p class="empty-txt">Users not found</p>
+            <p class="empty-txt">Users not found </p>
         </div>
     </div>
 
@@ -49,7 +50,7 @@ export default defineComponent({
             this.loading = true
             GitUserService.getAll()
                 .then((res) => {
-                    const users: AppUser[] = res.data.map((item: any) => {
+                    this.userList = res.data.map((item: any) => {
                         const { avatar_url, html_url, id, login, repos_url } = item;
                         return {
                             avatar_url,
@@ -59,7 +60,6 @@ export default defineComponent({
                             repos_url,
                         }
                     })
-                    this.$store.commit('setUsers', users)
                     this.loading = false
 
                 })

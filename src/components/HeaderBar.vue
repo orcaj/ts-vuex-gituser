@@ -8,10 +8,7 @@
         </router-link>
         <div class="search-bar" v-if="$store.state.page === 'home'">
             <img alt="search" src="../assets/search-icon.png" width="16" height="16" class="search-icon">
-            <!-- <input type="text" class="search-input" @keyup="(e) => setSearchKey(e.target.value)"
-                :value="$store.state.keyword" /> -->
-                <input type="text" class="search-input" @keyup="(e) => setSearchKey(e.target.value)"
-               />
+            <input type="text" class="search-input" @keyup="(e) => setSearchKey(e)" />
         </div>
     </nav>
 </template>
@@ -22,9 +19,9 @@ import { defineComponent } from 'vue';
 export default defineComponent({
     name: 'HeaderBar',
     methods: {
-        setSearchKey(val: string) {
-            this.$store.commit('searchUsers', val)
-        }        
+        setSearchKey(evt: Event) {
+            this.$store.commit('setKeyword', (evt.target as HTMLInputElement).value)
+        }
     }
 })
 
